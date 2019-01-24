@@ -13,6 +13,7 @@
 		EB3BA19A21F91E4F00609B32 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EB3BA19821F91E4F00609B32 /* Main.storyboard */; };
 		EB3BA19C21F91E5100609B32 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EB3BA19B21F91E5100609B32 /* Assets.xcassets */; };
 		EB3BA19F21F91E5100609B32 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EB3BA19D21F91E5100609B32 /* LaunchScreen.storyboard */; };
+		EB7640AF21FA189C00C8576A /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB7640AE21FA189C00C8576A /* Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		EB3BA19B21F91E5100609B32 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EB3BA19E21F91E5100609B32 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		EB3BA1A021F91E5100609B32 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		EB7640AE21FA189C00C8576A /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -40,6 +42,7 @@
 		EB3BA18621F91E4F00609B32 = {
 			isa = PBXGroup;
 			children = (
+				EB7640AE21FA189C00C8576A /* Extensions.swift */,
 				EB3BA19121F91E4F00609B32 /* Mixed Reality */,
 				EB3BA19021F91E4F00609B32 /* Products */,
 			);
@@ -140,6 +143,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EB3BA19721F91E4F00609B32 /* ViewController.swift in Sources */,
+				EB7640AF21FA189C00C8576A /* Extensions.swift in Sources */,
 				EB3BA19321F91E4F00609B32 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
