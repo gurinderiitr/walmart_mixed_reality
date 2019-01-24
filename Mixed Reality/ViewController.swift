@@ -158,16 +158,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         planeNode.eulerAngles = SCNVector3Make(planeNode.eulerAngles.x - (Float.pi / 2), planeNode.eulerAngles.y, planeNode.eulerAngles.z)
         planeNode.position = res.worldTransform.position(offset: SCNVector3(0, 0, 0.01))
         
-      
         sceneView.scene.rootNode.addChildNode(planeNode)
-        
-        //        guard let shipScene = SCNScene(named: "ship.scn"),
-        //            let shipNode = shipScene.rootNode.childNode(withName: "ship", recursively: false)
-        //            else { return }
-        //
-        //
-        //        shipNode.position = SCNVector3(x,y,z)
-        //        sceneView.scene.rootNode.addChildNode(shipNode)
         
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.2) { [weak planeNode, weak sceneView] in
             
@@ -207,9 +198,20 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         planeNodes.forEach {
             $0.removeFromParentNode()
         }
+        
+        guard let shipScene = SCNScene(named: "art.scnassets/ship.scn"),
+            let shipNode = shipScene.rootNode.childNode(withName: "ship", recursively: false)
+            else { return }
+
+        sceneView.scene.rootNode.addChildNode(shipNode)
+        let t = updatePositionAndOrientationOf(position: SCNVector3(0, 0, 0.25), relativeTo: sceneView.pointOfView!)
+        shipNode.simdTransform = t.scale(x: 0.20, y: 0.20, z: 0.20)
+        //        sceneView.scene.rootNode.addChildNode(shipNode)
+        
+
     }
     
-    func updatePositionAndOrientationOf(_ node: SCNNode, withPosition position: SCNVector3, relativeTo referenceNode: SCNNode) {
+    func updatePositionAndOrientationOf(position: SCNVector3, relativeTo referenceNode: SCNNode) -> simd_float4x4 {
         let referenceNodeTransform = matrix_float4x4(referenceNode.transform)
         
         // Setup a translation matrix with the desired position
@@ -220,8 +222,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         // Combine the configured translation matrix with the referenceNode's transform to get the desired position AND orientation
         let updatedTransform = matrix_multiply(referenceNodeTransform, translationMatrix)
-        node.transform = SCNMatrix4(updatedTransform)
+        //        node.transform = SCNMatrix4(updatedTransform)
+        return updatedTransform
     }
-    
+
 
 }
