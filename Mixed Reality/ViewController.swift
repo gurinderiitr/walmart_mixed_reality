@@ -191,7 +191,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             print("v1p \(v1p), v2p \(v2p)")
             print("rect\(rect)")
             
-            let sel = pic2!.withGrayscale.cropped(boundingBox: rect.scaled(by: pic2!.size.width / sceneView.bounds.width))
+            let sel = pic2!.blurred(radius: 10).cropped(boundingBox: rect.scaled(by: pic2!.size.width / sceneView.bounds.width))
            
             planeGeometry.firstMaterial?.diffuse.contents = sel
         }
@@ -207,7 +207,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             else { return }
         
         sceneView.scene.rootNode.addChildNode(shipNode)
-        let t = updatePositionAndOrientationOf(position: SCNVector3(0, 0, -0.25), relativeTo: sceneView.pointOfView!)
+        let t = updatePositionAndOrientationOf(position: SCNVector3(0, -0.25, -0.25), relativeTo: sceneView.pointOfView!)
         shipNode.simdTransform = t.scale(x: 0.40, y: 0.40, z: 0.40)
     
     }
