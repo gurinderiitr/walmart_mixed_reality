@@ -199,16 +199,15 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             $0.removeFromParentNode()
         }
         
-        guard let shipScene = SCNScene(named: "art.scnassets/ship.scn"),
-            let shipNode = shipScene.rootNode.childNode(withName: "ship", recursively: false)
+        guard
+            let shipScene = SCNScene(named: "art.scnassets/vase/vase.scn"),
+            let shipNode = shipScene.rootNode.childNode(withName: "vase", recursively: false)
             else { return }
-
-        sceneView.scene.rootNode.addChildNode(shipNode)
-        let t = updatePositionAndOrientationOf(position: SCNVector3(0, 0, 0.25), relativeTo: sceneView.pointOfView!)
-        shipNode.simdTransform = t.scale(x: 0.20, y: 0.20, z: 0.20)
-        //        sceneView.scene.rootNode.addChildNode(shipNode)
         
-
+        sceneView.scene.rootNode.addChildNode(shipNode)
+        let t = updatePositionAndOrientationOf(position: SCNVector3(0, 0, -0.25), relativeTo: sceneView.pointOfView!)
+        shipNode.simdTransform = t.scale(x: 0.40, y: 0.20, z: 0.20)
+    
     }
     
     func updatePositionAndOrientationOf(position: SCNVector3, relativeTo referenceNode: SCNNode) -> simd_float4x4 {
