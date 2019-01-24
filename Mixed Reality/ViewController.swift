@@ -11,6 +11,14 @@ import SceneKit
 import ARKit
 
 extension UIImage {
+    
+    func cropped(boundingBox: CGRect) -> UIImage? {
+        guard let cgImage = self.cgImage?.cropping(to: boundingBox) else {
+            return nil
+        }
+        return UIImage(cgImage: cgImage)
+    }
+
     var withGrayscale: UIImage {
         guard let ciImage = CIImage(image: self, options: nil) else { return self }
         let paramsColor: [String: AnyObject] = [kCIInputBrightnessKey: NSNumber(value: 0.0), kCIInputContrastKey: NSNumber(value: 1.0), kCIInputSaturationKey: NSNumber(value: 0.0)]
@@ -113,7 +121,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         let plane = SCNPlane(width: width, height: height)
 
         // 3
-        plane.materials.first?.diffuse.contents = UIColor.blue.withAlphaComponent(0.5)
+        plane.materials.first?.diffuse.contents = UIColor.blue.withAlphaComponent(0.2)
 
         // 4
         let planeNode = SCNNode(geometry: plane)
@@ -153,26 +161,18 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         let hitTestResults = sceneView.hitTest(tapLocation, types: .existingPlaneUsingExtent)
         guard let res = hitTestResults.first,
             let anchor = res.anchor else { return }
-//
-//        guard let hitTestResult = hitTestResults.first else { return }
-        let translation = res.worldTransform.translation
-        let x = translation.x
-        let y = translation.y
-        let z = translation.z
 
         print("plane distance: \(res.distance)")
-  
-//        let pic = sceneView.snapshot().withGrayscale
-
+        
+       
         let planeGeometry = SCNPlane(width: 0.1, height: 0.1)
-        planeGeometry.firstMaterial?.diffuse.contents = UIColor.red.withAlphaComponent(0.5)
+        planeGeometry.firstMaterial?.diffuse.contents = UIColor.red.withAlphaComponent(0.2)
         let planeNode = SCNNode(geometry: planeGeometry)
 
-//        planeNode.position = SCNVector3(x, y, z)
-        
         planeNode.simdTransform = anchor.transform
         planeNode.eulerAngles = SCNVector3Make(planeNode.eulerAngles.x - (Float.pi / 2), planeNode.eulerAngles.y, planeNode.eulerAngles.z)
         planeNode.position = res.worldTransform.position()
+        
       
         sceneView.scene.rootNode.addChildNode(planeNode)
     
@@ -183,6 +183,38 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 //
 //        shipNode.position = SCNVector3(x,y,z)
 //        sceneView.scene.rootNode.addChildNode(shipNode)
+        
+        let bbox = planeNode.presentation.boundingBox
+        
+        
+        //world coordinates
+        var v1w =  planeNode.convertPosition(bbox.min, to: sceneView.scene.rootNode)
+        var v2w =  planeNode.convertPosition(bbox.max, to: sceneView.scene.rootNode)
+        
+        v1w.z = 0
+        v2w.z = 0
+        
+        //projected coordinates
+        let v1p = sceneView.projectPoint(v1w)
+        let v2p = sceneView.projectPoint(v2w)
+        
+        //frame rectangle
+        let rect = CGRect(x: CGFloat(v1p.x), y: CGFloat(v2p.y), width: CGFloat(v2p.x - v1p.x), height: CGFloat(v1p.y - v2p.y))
+//        let rectView = UIView(frame: rect)
+//        rectView.alpha = 0.3
+//        rectView.backgroundColor = UIColor.purple
+//        sceneView.addSubview(rectView)
+
+
+        let pic = sceneView.snapshot().withGrayscale
+        let sel = pic.cropped(boundingBox: rect)
+        planeGeometry.firstMaterial?.diffuse.contents = sel
+        
+        print("v1 \(bbox.min), v2\(bbox.max)")
+        print("v1w \(v1w), v2w\(v2w)")
+        print("v1p \(v1p), v2w\(v2p)")
+        print("rect\(rect)")
+        
     }
     
     func updatePositionAndOrientationOf(_ node: SCNNode, withPosition position: SCNVector3, relativeTo referenceNode: SCNNode) {
@@ -199,6 +231,4 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         node.transform = SCNMatrix4(updatedTransform)
     }
     
-
-
 }
