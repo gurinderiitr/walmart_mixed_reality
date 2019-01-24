@@ -39,6 +39,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         // Set the scene to the view
         sceneView.scene = scene
         sceneView.debugOptions = [.showFeaturePoints ]
+        sceneView.autoenablesDefaultLighting = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -47,7 +48,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         // Create a session configuration
         let configuration = ARWorldTrackingConfiguration()
         configuration.planeDetection = .vertical
-
+        configuration.isLightEstimationEnabled = true
+        
         // Run the view's session
         sceneView.session.run(configuration)
     }
@@ -206,7 +208,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         sceneView.scene.rootNode.addChildNode(shipNode)
         let t = updatePositionAndOrientationOf(position: SCNVector3(0, 0, -0.25), relativeTo: sceneView.pointOfView!)
-        shipNode.simdTransform = t.scale(x: 0.40, y: 0.20, z: 0.20)
+        shipNode.simdTransform = t.scale(x: 0.40, y: 0.40, z: 0.40)
     
     }
     
