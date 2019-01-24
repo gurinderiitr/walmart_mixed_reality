@@ -184,36 +184,41 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 //        shipNode.position = SCNVector3(x,y,z)
 //        sceneView.scene.rootNode.addChildNode(shipNode)
         
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.1) { [weak planeNode, weak sceneView] in
+            
+            guard let planeNode = planeNode, let sceneView = sceneView else { return }
         let bbox = planeNode.presentation.boundingBox
         
+        print("bbox: \(bbox)")
         
-        //world coordinates
-        var v1w =  planeNode.convertPosition(bbox.min, to: sceneView.scene.rootNode)
-        var v2w =  planeNode.convertPosition(bbox.max, to: sceneView.scene.rootNode)
+        // world coordinates
+        let v1w =  planeNode.convertPosition(bbox.min, to: sceneView.scene.rootNode)
+        let v2w =  planeNode.convertPosition(bbox.max, to: sceneView.scene.rootNode)
         
-        v1w.z = 0
-        v2w.z = 0
+//        v1w.z = 0
+//        v2w.z = 0
         
         //projected coordinates
         let v1p = sceneView.projectPoint(v1w)
         let v2p = sceneView.projectPoint(v2w)
         
         //frame rectangle
-        let rect = CGRect(x: CGFloat(v1p.x), y: CGFloat(v2p.y), width: CGFloat(v2p.x - v1p.x), height: CGFloat(v1p.y - v2p.y))
-//        let rectView = UIView(frame: rect)
-//        rectView.alpha = 0.3
-//        rectView.backgroundColor = UIColor.purple
-//        sceneView.addSubview(rectView)
+        let rect = CGRect(x: CGFloat(v1p.x), y: CGFloat(v2p.y), width: max(10, CGFloat(v2p.x - v1p.x)), height: max(10, CGFloat(v1p.y - v2p.y)))
 
+        let rectView = UIView(frame: rect)
+        rectView.alpha = 0.3
+        rectView.backgroundColor = UIColor.purple
+        sceneView.addSubview(rectView)
+    }
 
-        let pic = sceneView.snapshot().withGrayscale
-        let sel = pic.cropped(boundingBox: rect)
-        planeGeometry.firstMaterial?.diffuse.contents = sel
+//        let pic = sceneView.snapshot().withGrayscale
+//        let sel = pic.cropped(boundingBox: rect)
+//        planeGeometry.firstMaterial?.diffuse.contents = sel
         
-        print("v1 \(bbox.min), v2\(bbox.max)")
-        print("v1w \(v1w), v2w\(v2w)")
-        print("v1p \(v1p), v2w\(v2p)")
-        print("rect\(rect)")
+//        print("v1 \(bbox.min), v2\(bbox.max)")
+//        print("v1w \(v1w), v2w \(v2w)")
+//        print("v1p \(v1p), v2p \(v2p)")
+//        print("rect\(rect)")
         
     }
     
@@ -231,4 +236,5 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         node.transform = SCNMatrix4(updatedTransform)
     }
     
+
 }
